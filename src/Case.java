@@ -3,7 +3,7 @@ import java.util.List;
 public class Case {
 
 	/**
-	 * 
+	 * Nique sa mère
 	 */
 	private static final long serialVersionUID = 1L;
 
