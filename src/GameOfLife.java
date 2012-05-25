@@ -7,6 +7,7 @@ public class GameOfLife {
 		// TODO Auto-generated method stub
 		FenetrePrincipale laFenetre = new FenetrePrincipale(15);
 		laFenetre.setVisible(true);
+		//TEST
 	}
 
 }
