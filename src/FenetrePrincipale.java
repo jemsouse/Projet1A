@@ -32,6 +32,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	 * Constructeur
 	 */
 	public FenetrePrincipale(int uneGrilleDimension) {
+		cDimension = uneGrilleDimension;
 		// Taille de la fenêtre principale
 		this.setSize(700, 700);
 		// Ajout d'une barre de menu
@@ -76,8 +77,16 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
-
+	public void update(Observable Modele, Object arg1) {
+		Case[][] grille = (Case[][]) arg1;
+		for (int caseY = 0; caseY < cDimension; caseY++) {
+			for (int caseX = 0; caseX < cDimension; caseX++) {
+				if ((grille[caseX][caseY]).isAllumee()) {
+					lCases[caseY][caseX].setBackground(Color.white);
+				} else {
+					lCases[caseY][caseX].setBackground(Color.red);
+				}
+			}
+		}
 	}
 }

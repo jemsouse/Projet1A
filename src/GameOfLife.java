@@ -4,10 +4,15 @@ public class GameOfLife {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		FenetrePrincipale laFenetre = new FenetrePrincipale(15);
+		// Instance de notre vue
+		FenetrePrincipale laFenetre = new FenetrePrincipale(Constantes.DIMENSION_GRILLE);
 		laFenetre.setVisible(true);
-		//TEST
+
+		// Instance de notre modèle
+		Modele leModele = new Modele(laFenetre);
+		leModele.setEnMarche(true);
+		Thread t = new Thread(leModele);
+		t.start();
 	}
 
 }

@@ -1,10 +1,8 @@
 import java.util.List;
 
 public class Case {
-
-	/**
-	 * Nique sa mère
-	 */
+	
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	// Position de la case sur la grille
@@ -13,22 +11,92 @@ public class Case {
 
 	// Case est allumée (true) ou éteinte (false)
 	private boolean allumee;
+	
+	private int nbCasesAdjacentesAllumees;
 
 	/*
-	 * Liste des cases adjacentes Numéro des cases dans la liste : 0 1 2 3 X 4 5
-	 * 6 7
+	 * Liste des cases adjacentes Numéro des cases dans la liste : 
+	 * 0 1 2 
+	 * 3 X 4 
+	 * 5 6 7
 	 */
-	private List<Case> lCasesAdjacentes;
+	private Case[] lCasesAdjacentes;
 
 	// Constructeurs
 	public Case(int X, int Y) {
 		posX = X;
 		posY = Y;
+		nbCasesAdjacentesAllumees = 0;
 	}
 
 	public Case(int X, int Y, boolean onOff) {
 		this(X, Y);
 		allumee = onOff;
 	}
+	
+	// Méthodes
+	private void calculeNbCasesAdjAllumee() {
+		for(int i = 0; i < 8; i++) {
+			if(lCasesAdjacentes[i] != null && lCasesAdjacentes[i].allumee) {
+				nbCasesAdjacentesAllumees++;
+			}
+		}
+	}
+
+	// Getters et Setters
+	/**
+	 * @return allumee
+	 */
+	public boolean isAllumee() {
+		return allumee;
+	}
+
+	/**
+	 * @param allumee to set
+	 */
+	public void setAllumee(boolean allumee) {
+		this.allumee = allumee;
+	}
+
+	/**
+	 * @return the nbCasesAdjacentesAllumees
+	 */
+	public int getNbCasesAdjacentesAllumees() {
+		return nbCasesAdjacentesAllumees;
+	}
+
+	/**
+	 * @param nbCasesAdjacentesAllumees the nbCasesAdjacentesAllumees to set
+	 */
+	public void setNbCasesAdjacentesAllumees(int nbCasesAdjacentesAllumees) {
+		this.nbCasesAdjacentesAllumees = nbCasesAdjacentesAllumees;
+	}
+
+	public Case[] getlCasesAdjacentes() {
+		return lCasesAdjacentes;
+	}
+
+	public void setlCasesAdjacentes(Case[] lCasesAdjacentes) {
+		this.lCasesAdjacentes = lCasesAdjacentes;
+		calculeNbCasesAdjAllumee();
+	}
+
+	public int getPosX() {
+		return posX;
+	}
+
+	public void setPosX(int posX) {
+		this.posX = posX;
+	}
+
+	public int getPosY() {
+		return posY;
+	}
+
+	public void setPosY(int posY) {
+		this.posY = posY;
+	}
+	
+	
 
 }
