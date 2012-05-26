@@ -82,9 +82,9 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		for (int caseY = 0; caseY < cDimension; caseY++) {
 			for (int caseX = 0; caseX < cDimension; caseX++) {
 				if ((grille[caseX][caseY]).isAllumee()) {
-					lCases[caseY][caseX].setBackground(Color.white);
+					lCases[caseY][caseX].setBackground(Color.blue);
 				} else {
-					lCases[caseY][caseX].setBackground(Color.red);
+					lCases[caseY][caseX].setBackground(Color.white);
 				}
 			}
 		}

@@ -72,14 +72,18 @@ public class Modele extends Observable implements Runnable {
 
 	// Calcule une nouvelle génération
 	private void newGeneration() {
+		// donneCasesAdjacentes();
 		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
 			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
 				Case c = lCases[caseX][caseY];
-				if (!(c.isAllumee() && c.getNbCasesAdjacentesAllumees() > 2)) {
-					c.setAllumee(false);
+				c.calculeNbCasesAdjAllumee();
 
-				} else if (!c.isAllumee()
-						&& c.getNbCasesAdjacentesAllumees() == 3) {
+				if (c.getNbCasesAdjacentesAllumees() == 0
+						|| c.getNbCasesAdjacentesAllumees() == 1) {
+					c.setAllumee(false);
+				} else if (c.getNbCasesAdjacentesAllumees() > 3) {
+					c.setAllumee(false);
+				} else if (c.getNbCasesAdjacentesAllumees() == 3) {
 					c.setAllumee(true);
 				}
 			}
@@ -150,9 +154,8 @@ public class Modele extends Observable implements Runnable {
 						lCasesAdjacentes[7] = lCases[caseX + 1][caseY + 1];
 					}
 				}
+				c.setlCasesAdjacentes(lCasesAdjacentes);
 			}
-
-			c.setlCasesAdjacentes(lCasesAdjacentes);
 		}
 	}
 
@@ -163,11 +166,11 @@ public class Modele extends Observable implements Runnable {
 		while (true) {
 			synchronized (this) {
 				if (enMarche) {
-					//if (premierTour) {
+					if (premierTour) {
 						newRandomGeneration();
-					/*} else {
+					} else {
 						newGeneration();
-					}*/
+					}
 					setChanged();
 					notifyObservers(lCases);
 				}

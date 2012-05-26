@@ -1,8 +1,5 @@
-import java.util.List;
-
 public class Case {
-	
-	@SuppressWarnings("unused")
+
 	private static final long serialVersionUID = 1L;
 
 	// Position de la case sur la grille
@@ -11,14 +8,12 @@ public class Case {
 
 	// Case est allumée (true) ou éteinte (false)
 	private boolean allumee;
-	
+
 	private int nbCasesAdjacentesAllumees;
 
 	/*
-	 * Liste des cases adjacentes Numéro des cases dans la liste : 
-	 * 0 1 2 
-	 * 3 X 4 
-	 * 5 6 7
+	 * Liste des cases adjacentes Numéro des cases dans la liste : 0 1 2 3 X 4 5
+	 * 6 7
 	 */
 	private Case[] lCasesAdjacentes;
 
@@ -27,17 +22,19 @@ public class Case {
 		posX = X;
 		posY = Y;
 		nbCasesAdjacentesAllumees = 0;
+		lCasesAdjacentes = new Case[8];
 	}
 
 	public Case(int X, int Y, boolean onOff) {
 		this(X, Y);
 		allumee = onOff;
 	}
-	
+
 	// Méthodes
-	private void calculeNbCasesAdjAllumee() {
-		for(int i = 0; i < 8; i++) {
-			if(lCasesAdjacentes[i] != null && lCasesAdjacentes[i].allumee) {
+	public void calculeNbCasesAdjAllumee() {
+		nbCasesAdjacentesAllumees = 0;
+		for (int i = 0; i < 8; i++) {
+			if (lCasesAdjacentes[i] != null && lCasesAdjacentes[i].allumee) {
 				nbCasesAdjacentesAllumees++;
 			}
 		}
@@ -52,7 +49,8 @@ public class Case {
 	}
 
 	/**
-	 * @param allumee to set
+	 * @param allumee
+	 *            to set
 	 */
 	public void setAllumee(boolean allumee) {
 		this.allumee = allumee;
@@ -66,7 +64,8 @@ public class Case {
 	}
 
 	/**
-	 * @param nbCasesAdjacentesAllumees the nbCasesAdjacentesAllumees to set
+	 * @param nbCasesAdjacentesAllumees
+	 *            the nbCasesAdjacentesAllumees to set
 	 */
 	public void setNbCasesAdjacentesAllumees(int nbCasesAdjacentesAllumees) {
 		this.nbCasesAdjacentesAllumees = nbCasesAdjacentesAllumees;
@@ -78,7 +77,6 @@ public class Case {
 
 	public void setlCasesAdjacentes(Case[] lCasesAdjacentes) {
 		this.lCasesAdjacentes = lCasesAdjacentes;
-		calculeNbCasesAdjAllumee();
 	}
 
 	public int getPosX() {
@@ -96,7 +94,5 @@ public class Case {
 	public void setPosY(int posY) {
 		this.posY = posY;
 	}
-	
-	
 
 }
