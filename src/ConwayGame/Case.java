@@ -1,5 +1,5 @@
 package ConwayGame;
-public class Case {
+public class Case {//Committest
 
 	private static final long serialVersionUID = 1L;
 
