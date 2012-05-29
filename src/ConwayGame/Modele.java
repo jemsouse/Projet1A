@@ -1,4 +1,4 @@
-import java.awt.Color;
+package ConwayGame;
 import java.util.*;
 
 public class Modele extends Observable implements Runnable {

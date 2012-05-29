@@ -1,3 +1,4 @@
+package ConwayGame;
 public class Case {
 
 	private static final long serialVersionUID = 1L;
