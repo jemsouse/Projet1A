@@ -2,6 +2,7 @@ package ConwayGame;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -61,6 +62,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		setContentPane(this.pPrincipal);
 		// Ajout d'un conteneur à droite de type FlowLayout
 		this.pDroite = new JPanel(new FlowLayout());
+		this.pDroite.setPreferredSize(new Dimension(150, 25));
 		this.pPrincipal.add(this.pDroite, BorderLayout.EAST);
 		//Bouton démarrer, qui déclenche la fonction play() du modèle au clic
 		this.bDemarrer = new JButton("Démarrer");
