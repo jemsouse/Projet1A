@@ -18,5 +18,4 @@ public class GameOfLife {
 		Thread t = new Thread(leModele);
 		t.start();
 	}
-
 }

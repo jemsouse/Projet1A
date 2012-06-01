@@ -29,6 +29,9 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	private int cDimension;
 	private Modele leModele;
 	private CaseVue[][] lCasesVues;
+	private final JButton bReInit;
+	private final JButton bDemarrer;
+	private final JButton bPause;
 
 	/**
 	 * Accesseurs pour leModele
@@ -56,6 +59,40 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		// Ajout d'un conteneur principal
 		this.pPrincipal = new JPanel(new BorderLayout());
 		setContentPane(this.pPrincipal);
+		// Ajout d'un conteneur à droite de type FlowLayout
+		this.pDroite = new JPanel(new FlowLayout());
+		this.pPrincipal.add(this.pDroite, BorderLayout.EAST);
+		//Bouton démarrer, qui déclenche la fonction play() du modèle au clic
+		this.bDemarrer = new JButton("Démarrer");
+		this.bDemarrer.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent event){
+				leModele.play();
+			}
+		});
+		//Bouton pause, qui déclenche la fonction pause() du modèle au clic
+		this.bPause = new JButton("Pause");
+		this.bPause.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent event){
+				leModele.pause();
+			}
+		});
+		//Bouton réinitialiser, qui déclenche la fonction reInit() du modèle au clic
+		this.bReInit = new JButton("Initialiser");
+		this.bReInit.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent event){
+				if(bReInit.getText().equals("Réinitialiser")){
+					bReInit.setText("Initialiser");
+				}
+				else{
+					bReInit.setText("Réinitialiser");
+				}
+				leModele.reInit(bReInit.getText());
+			}
+		});
+		// Ajout des boutons dans le conteneur de la region EAST
+		this.pDroite.add(this.bDemarrer);
+		this.pDroite.add(this.bPause);
+		this.pDroite.add(this.bReInit);
 		// Ajout de la grille
 		this.pCentre = new JPanel();
 		this.pPrincipal.add(this.pCentre, BorderLayout.CENTER);
@@ -70,42 +107,15 @@ public class FenetrePrincipale extends JFrame implements Observer {
 				// On transmet au modèle l'évènement "clic sur la case" pour qu'il la mette à jour
 				lCasesVues[caseX][caseY].addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent event) {
+						bReInit.setText("Réinitialiser");
 						CaseVue laCaseVueClic = (CaseVue) event.getSource();
-						leModele.updateGrille(laCaseVueClic.getPosX(),laCaseVueClic.getPosY());
+						leModele.updateCase(laCaseVueClic.getPosX(),laCaseVueClic.getPosY());
 					}
 				});
 				//On ajoute la CaseVue dans le GridLayout pCentre
-				this.pCentre.add(uneCaseVue);
+				this.pCentre.add(lCasesVues[caseX][caseY]);
 			}
 		}
-		// Ajout d'un conteneur à droite de type FlowLayout
-		this.pDroite = new JPanel(new FlowLayout());
-		this.pPrincipal.add(this.pDroite, BorderLayout.EAST);
-		//Bouton démarrer, qui déclenche la fonction play() du modèle au clic
-		JButton bDemarrer = new JButton("Démarrer");
-		bDemarrer.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent event){
-				leModele.play();
-			}
-		});
-		//Bouton pause, qui déclenche la fonction pause() du modèle au clic
-		JButton bPause = new JButton("Pause");
-		bPause.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent event){
-				leModele.pause();
-			}
-		});
-		//Bouton réinitialiser, qui déclenche la fonction reInit() du modèle au clic
-		JButton bReInit = new JButton("Réinitialiser");
-		bReInit.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent event){
-				leModele.reInit();
-			}
-		});
-		// Ajout des boutons dans le conteneur de la region EAST
-		this.pDroite.add(bDemarrer);
-		this.pDroite.add(bPause);
-		this.pDroite.add(bReInit);
 	}
 	/**
 	 * Mise à jour de la grille selon le modèle
