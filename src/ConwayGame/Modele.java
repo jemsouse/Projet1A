@@ -186,6 +186,8 @@ public class Modele extends Observable implements Runnable {
 				lCases[caseX][caseY].setAllumee(false);
 			}
 		}
+
+		notifyVue();
 	}
 
 	public void play() {
@@ -194,6 +196,16 @@ public class Modele extends Observable implements Runnable {
 
 	public void pause() {
 		enMarche = false;
+	}
+
+	private void notifyVue() {
+		setChanged();
+		notifyObservers(lCases);
+	}
+
+	public void updateCase(int posX, int posY) {
+		lCases[posX][posY].setAllumee(!lCases[posX][posY].isAllumee());
+
 	}
 
 	// Méthodes de Runnable
@@ -208,8 +220,7 @@ public class Modele extends Observable implements Runnable {
 					} else {
 						newGeneration();
 					}
-					setChanged();
-					notifyObservers(lCases);
+					notifyVue();
 				}
 				try {
 					wait(waitingTime);
@@ -222,10 +233,4 @@ public class Modele extends Observable implements Runnable {
 		}
 
 	}
-
-	public void updateCase(int posX, int posY) {
-		lCases[posX][posY].setAllumee(!lCases[posX][posY].isAllumee());
-
-	}
-
 }
