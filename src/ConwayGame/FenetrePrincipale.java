@@ -27,8 +27,8 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	private JMenuBar menuBarre;
 	private FlowLayout pBoutons;
 	private int cDimension;
-	private JPanel[][] lCases;
 	private Modele leModele;
+	private CaseVue[][] lCasesVues;
 
 	/**
 	 * Accesseurs pour leModele
@@ -63,21 +63,19 @@ public class FenetrePrincipale extends JFrame implements Observer {
 				uneGrilleDimension));
 		// Remplissage de la grille, sauvegarde des références cases créent dans
 		// lCases
-		this.lCases = new JPanel[uneGrilleDimension][uneGrilleDimension];
-		for (int caseY = 0; caseY < uneGrilleDimension; caseY++) {
-			for (int caseX = 0; caseX < uneGrilleDimension; caseX++) {
-				lCases[caseY][caseX] = new JPanel();
-				lCases[caseY][caseX].setBackground(Color.white);
-				lCases[caseY][caseX].setBorder(BorderFactory
-						.createLineBorder(Color.black));
-				lCases[caseY][caseX].addMouseListener(new MouseAdapter() {
+		this.lCasesVues = new CaseVue[uneGrilleDimension][uneGrilleDimension];
+		for (int caseX = 0; caseX < uneGrilleDimension; caseX++) {
+			for (int caseY = 0; caseY < uneGrilleDimension; caseY++) {
+				lCasesVues[caseX][caseY] = new CaseVue(caseX,caseY);
+				// On transmet au modèle l'évènement "clic sur la case" pour qu'il la mette à jour
+				lCasesVues[caseX][caseY].addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent event) {
-						// On transmet au modèle l'évènement "clic sur la case"
-						
+						CaseVue laCaseVueClic = (CaseVue) event.getSource();
+						leModele.updateGrille(laCaseVueClic.getPosX(),laCaseVueClic.getPosY());
 					}
 				});
-
-				this.pCentre.add(lCases[caseY][caseX]);
+				//On ajoute la CaseVue dans le GridLayout pCentre
+				this.pCentre.add(uneCaseVue);
 			}
 		}
 		// Ajout d'un conteneur à droite de type FlowLayout
@@ -115,12 +113,12 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	@Override
 	public void update(Observable Modele, Object arg1) {
 		Case[][] grille = (Case[][]) arg1;
-		for (int caseY = 0; caseY < cDimension; caseY++) {
-			for (int caseX = 0; caseX < cDimension; caseX++) {
+		for (int caseX = 0; caseX < cDimension; caseX++) {
+			for (int caseY = 0; caseY < cDimension; caseY++) {
 				if ((grille[caseX][caseY]).isAllumee()) {
-					lCases[caseY][caseX].setBackground(Color.blue);
+					lCasesVues[caseX][caseY].setBackground(Color.blue);
 				} else {
-					lCases[caseY][caseX].setBackground(Color.white);
+					lCasesVues[caseX][caseY].setBackground(Color.white);
 				}
 			}
 		}

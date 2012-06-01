@@ -1,4 +1,5 @@
 package ConwayGame;
+
 import java.util.*;
 
 public class Modele extends Observable implements Runnable {
@@ -7,8 +8,6 @@ public class Modele extends Observable implements Runnable {
 	private boolean premierTour;
 
 	private Case[][] lCases;
-
-	private boolean[][] grille;
 
 	// Constructeurs
 	public Modele(Observer unObserver) {
@@ -72,7 +71,6 @@ public class Modele extends Observable implements Runnable {
 
 	// Calcule une nouvelle génération
 	private void newGeneration() {
-		// donneCasesAdjacentes();
 		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
 			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
 				Case c = lCases[caseX][caseY];
@@ -157,6 +155,24 @@ public class Modele extends Observable implements Runnable {
 				c.setlCasesAdjacentes(lCasesAdjacentes);
 			}
 		}
+	}
+
+	public void reInit() {
+		premierTour = true;
+		
+		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
+			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+				lCases[caseX][caseY].setAllumee(false);
+			}
+		}
+	}
+
+	public void play() {
+		enMarche = true;
+	}
+
+	public void pause() {
+		enMarche = false;
 	}
 
 	// Méthodes de Runnable
