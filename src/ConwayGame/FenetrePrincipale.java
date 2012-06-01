@@ -28,7 +28,18 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	private FlowLayout pBoutons;
 	private int cDimension;
 	private JPanel[][] lCases;
+	private Modele leModele;
 
+	/**
+	 * Accesseurs pour leModele
+	 * @return
+	 */
+	public Modele getLeModele() {
+		return leModele;
+	}
+	public void setLeModele(Modele leModele) {
+		this.leModele = leModele;
+	}
 	/**
 	 * Constructeur
 	 */
@@ -61,7 +72,8 @@ public class FenetrePrincipale extends JFrame implements Observer {
 						.createLineBorder(Color.black));
 				lCases[caseY][caseX].addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent event) {
-						// On transmet les informations de la case cliquée
+						// On transmet au modèle l'évènement "clic sur la case"
+						
 					}
 				});
 
@@ -71,12 +83,35 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		// Ajout d'un conteneur à droite de type FlowLayout
 		this.pDroite = new JPanel(new FlowLayout());
 		this.pPrincipal.add(this.pDroite, BorderLayout.EAST);
-		// Ajout des boutons dans le conteneur à droite
-		this.pDroite.add(new JButton("Démarrer"));
-		this.pDroite.add(new JButton("Bouton 2"));
-		this.pDroite.add(new JButton("Bouton 3"));
+		//Bouton démarrer, qui déclenche la fonction play() du modèle au clic
+		JButton bDemarrer = new JButton("Démarrer");
+		bDemarrer.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent event){
+				leModele.play();
+			}
+		});
+		//Bouton pause, qui déclenche la fonction pause() du modèle au clic
+		JButton bPause = new JButton("Pause");
+		bPause.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent event){
+				leModele.pause();
+			}
+		});
+		//Bouton réinitialiser, qui déclenche la fonction reInit() du modèle au clic
+		JButton bReInit = new JButton("Réinitialiser");
+		bReInit.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent event){
+				leModele.reInit();
+			}
+		});
+		// Ajout des boutons dans le conteneur de la region EAST
+		this.pDroite.add(bDemarrer);
+		this.pDroite.add(bPause);
+		this.pDroite.add(bReInit);
 	}
-
+	/**
+	 * Mise à jour de la grille selon le modèle
+	 */
 	@Override
 	public void update(Observable Modele, Object arg1) {
 		Case[][] grille = (Case[][]) arg1;
