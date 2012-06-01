@@ -9,6 +9,8 @@ public class Modele extends Observable implements Runnable {
 
 	private Case[][] lCases;
 
+	private int waitingTime;
+
 	// Constructeurs
 	public Modele(Observer unObserver) {
 		addObserver(unObserver);
@@ -23,6 +25,8 @@ public class Modele extends Observable implements Runnable {
 		donneCasesAdjacentes();
 
 		premierTour = true;
+
+		waitingTime = 1000;
 	}
 
 	/**
@@ -53,6 +57,21 @@ public class Modele extends Observable implements Runnable {
 	 */
 	public void setCases(Case[][] lCases) {
 		this.lCases = lCases;
+	}
+
+	/**
+	 * @return the waitingTime
+	 */
+	public int getWaitingTime() {
+		return waitingTime;
+	}
+
+	/**
+	 * @param waitingTime
+	 *            the waitingTime to set
+	 */
+	public void setWaitingTime(int waitingTime) {
+		this.waitingTime = waitingTime;
 	}
 
 	// Calcule une nouvelle génération aléatoirement
@@ -157,9 +176,11 @@ public class Modele extends Observable implements Runnable {
 		}
 	}
 
-	public void reInit() {
-		premierTour = true;
-		
+	public void reInit(String action) {
+		if ("Initialiser".equals(action)) {
+			premierTour = true;
+		}
+
 		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
 			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
 				lCases[caseX][caseY].setAllumee(false);
@@ -191,7 +212,7 @@ public class Modele extends Observable implements Runnable {
 					notifyObservers(lCases);
 				}
 				try {
-					wait(1000);
+					wait(waitingTime);
 				} catch (InterruptedException e) {
 					System.out.println(e.getMessage());
 				} catch (IllegalMonitorStateException e) {
@@ -199,6 +220,11 @@ public class Modele extends Observable implements Runnable {
 				}
 			}
 		}
+
+	}
+
+	public void updateCase(int posX, int posY) {
+		lCases[posX][posY].setAllumee(!lCases[posX][posY].isAllumee());
 
 	}
 
