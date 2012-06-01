@@ -66,6 +66,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		this.pPrincipal.add(this.pDroite, BorderLayout.EAST);
 		//Bouton démarrer, qui déclenche la fonction play() du modèle au clic
 		this.bDemarrer = new JButton("Démarrer");
+		this.bDemarrer.setPreferredSize(new Dimension(140,25));
 		this.bDemarrer.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent event){
 				leModele.play();
@@ -73,6 +74,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		});
 		//Bouton pause, qui déclenche la fonction pause() du modèle au clic
 		this.bPause = new JButton("Pause");
+		this.bPause.setPreferredSize(new Dimension(140,25));
 		this.bPause.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent event){
 				leModele.pause();
@@ -80,6 +82,7 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		});
 		//Bouton réinitialiser, qui déclenche la fonction reInit() du modèle au clic
 		this.bReInit = new JButton("Initialiser");
+		this.bReInit.setPreferredSize(new Dimension(140,25));
 		this.bReInit.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent event){
 				if(bReInit.getText().equals("Réinitialiser")){
