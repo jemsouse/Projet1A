@@ -1,4 +1,5 @@
 package ConwayGame;
+
 public class GameOfLife {
 
 	/**
@@ -6,7 +7,8 @@ public class GameOfLife {
 	 */
 	public static void main(String[] args) {
 		// Instance de notre vue
-		FenetrePrincipale laFenetre = new FenetrePrincipale(Constantes.DIMENSION_GRILLE);
+		FenetrePrincipale laFenetre = new FenetrePrincipale(
+				Constantes.DIMENSION_GRILLE);
 		laFenetre.setVisible(true);
 
 		// Instance de notre modèle

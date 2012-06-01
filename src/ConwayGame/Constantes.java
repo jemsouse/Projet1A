@@ -1,11 +1,12 @@
 package ConwayGame;
+
 /**
  * Classe de constantes.
  */
 
 /**
  * @author DJems
- *
+ * 
  */
 public final class Constantes {
 	// Donne la dimension de la grille

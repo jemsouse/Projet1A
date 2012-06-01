@@ -5,7 +5,7 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-public class CaseVue extends JPanel{
+public class CaseVue extends JPanel {
 	/**
 	 * Attributs
 	 */
@@ -15,14 +15,14 @@ public class CaseVue extends JPanel{
 	/**
 	 * Constructeur
 	 */
-	public CaseVue(int unePosX,int unePosY){
+	public CaseVue(int unePosX, int unePosY) {
 		super();
 		this.posX = unePosX;
 		this.posY = unePosY;
 		this.setBackground(Color.white);
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 	}
-	
+
 	/**
 	 * Accesseurs
 	 */
@@ -33,6 +33,7 @@ public class CaseVue extends JPanel{
 	public void setPosX(int posX) {
 		this.posX = posX;
 	}
+
 	public int getPosY() {
 		return posY;
 	}
