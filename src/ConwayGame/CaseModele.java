@@ -1,6 +1,6 @@
 package ConwayGame;
 
-public class Case {
+public class CaseModele {
 
 	private static final long serialVersionUID = 1L;
 
@@ -11,23 +11,25 @@ public class Case {
 	// Case est allumée (true) ou éteinte (false)
 	private boolean allumee;
 
+	private boolean nextEtat;
+
 	private int nbCasesAdjacentesAllumees;
 
 	/*
 	 * Liste des cases adjacentes Numéro des cases dans la liste : 0 1 2 3 X 4 5
 	 * 6 7
 	 */
-	private Case[] lCasesAdjacentes;
+	private CaseModele[] lCasesAdjacentes;
 
 	// Constructeurs
-	public Case(int X, int Y) {
-		posX = X;
-		posY = Y;
+	public CaseModele(int X, int Y) {
+		posX = Y;
+		posY = X;
 		nbCasesAdjacentesAllumees = 0;
-		lCasesAdjacentes = new Case[8];
+		lCasesAdjacentes = new CaseModele[8];
 	}
 
-	public Case(int X, int Y, boolean onOff) {
+	public CaseModele(int X, int Y, boolean onOff) {
 		this(X, Y);
 		allumee = onOff;
 	}
@@ -39,6 +41,21 @@ public class Case {
 			if (lCasesAdjacentes[i] != null && lCasesAdjacentes[i].allumee) {
 				nbCasesAdjacentesAllumees++;
 			}
+		}
+	}
+
+	public void calculeNextEtat() {
+		calculeNbCasesAdjAllumee();
+		if (allumee
+				&& (nbCasesAdjacentesAllumees < 2 || nbCasesAdjacentesAllumees > 3)) {
+			nextEtat = false;
+		} else if (allumee
+				&& (nbCasesAdjacentesAllumees == 2 || nbCasesAdjacentesAllumees == 3)) {
+			nextEtat = true;
+		} else if (!allumee && nbCasesAdjacentesAllumees == 3) {
+			nextEtat = true;
+		} else {
+			nextEtat = false;
 		}
 	}
 
@@ -59,6 +76,21 @@ public class Case {
 	}
 
 	/**
+	 * @return the nextEtat
+	 */
+	public boolean isNextEtat() {
+		return nextEtat;
+	}
+
+	/**
+	 * @param nextEtat
+	 *            the nextEtat to set
+	 */
+	public void setNextEtat(boolean nextEtat) {
+		this.nextEtat = nextEtat;
+	}
+
+	/**
 	 * @return the nbCasesAdjacentesAllumees
 	 */
 	public int getNbCasesAdjacentesAllumees() {
@@ -73,11 +105,11 @@ public class Case {
 		this.nbCasesAdjacentesAllumees = nbCasesAdjacentesAllumees;
 	}
 
-	public Case[] getlCasesAdjacentes() {
+	public CaseModele[] getlCasesAdjacentes() {
 		return lCasesAdjacentes;
 	}
 
-	public void setlCasesAdjacentes(Case[] lCasesAdjacentes) {
+	public void setlCasesAdjacentes(CaseModele[] lCasesAdjacentes) {
 		this.lCasesAdjacentes = lCasesAdjacentes;
 	}
 
@@ -95,6 +127,11 @@ public class Case {
 
 	public void setPosY(int posY) {
 		this.posY = posY;
+	}
+
+	@Override
+	public String toString() {
+		return ("[" + posX + "," + posY + "," + allumee + "," + nextEtat + "]");
 	}
 
 }

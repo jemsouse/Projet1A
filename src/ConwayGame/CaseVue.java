@@ -20,7 +20,7 @@ public class CaseVue extends JPanel {
 		this.posX = unePosX;
 		this.posY = unePosY;
 		this.setBackground(Color.white);
-		this.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 	}
 
 	/**

@@ -7,18 +7,18 @@ public class Modele extends Observable implements Runnable {
 
 	private boolean premierTour;
 
-	private Case[][] lCases;
+	private CaseModele[][] lCases;
 
 	private int waitingTime;
 
 	// Constructeurs
 	public Modele(Observer unObserver) {
 		addObserver(unObserver);
-		lCases = new Case[Constantes.DIMENSION_GRILLE][Constantes.DIMENSION_GRILLE];
+		lCases = new CaseModele[Constantes.DIMENSION_GRILLE][Constantes.DIMENSION_GRILLE];
 
-		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
-			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
-				lCases[caseX][caseY] = new Case(caseX, caseY, false);
+		for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+			for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
+				lCases[caseX][caseY] = new CaseModele(caseX, caseY, false);
 			}
 		}
 
@@ -47,7 +47,7 @@ public class Modele extends Observable implements Runnable {
 	/**
 	 * @return the lCases
 	 */
-	public Case[][] getCases() {
+	public CaseModele[][] getCases() {
 		return lCases;
 	}
 
@@ -55,7 +55,7 @@ public class Modele extends Observable implements Runnable {
 	 * @param lCases
 	 *            the lCases to set
 	 */
-	public void setCases(Case[][] lCases) {
+	public void setCases(CaseModele[][] lCases) {
 		this.lCases = lCases;
 	}
 
@@ -78,9 +78,9 @@ public class Modele extends Observable implements Runnable {
 	private void newRandomGeneration() {
 		Random rand = new Random();
 
-		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
-			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
-				Case c = lCases[caseX][caseY];
+		for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+			for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
+				CaseModele c = lCases[caseX][caseY];
 
 				c.setAllumee(rand.nextBoolean());
 			}
@@ -90,31 +90,29 @@ public class Modele extends Observable implements Runnable {
 
 	// Calcule une nouvelle génération
 	private void newGeneration() {
-		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
-			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
-				Case c = lCases[caseX][caseY];
-				c.calculeNbCasesAdjAllumee();
+		for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+			for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
+				CaseModele c = lCases[caseX][caseY];
+				c.calculeNextEtat();
+			}
+		}
 
-				if (c.getNbCasesAdjacentesAllumees() == 0
-						|| c.getNbCasesAdjacentesAllumees() == 1) {
-					c.setAllumee(false);
-				} else if (c.getNbCasesAdjacentesAllumees() > 3) {
-					c.setAllumee(false);
-				} else if (c.getNbCasesAdjacentesAllumees() == 3) {
-					c.setAllumee(true);
-				}
+		for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+			for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
+				CaseModele c = lCases[caseX][caseY];
+				c.setAllumee(c.isNextEtat());
 			}
 		}
 	}
 
 	private void donneCasesAdjacentes() {
-		Case[] lCasesAdjacentes = new Case[8];
-		Case c = new Case(-1, -1);
+		CaseModele[] lCasesAdjacentes = new CaseModele[8];
+		CaseModele c = new CaseModele(-1, -1);
 
-		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
-			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+		for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+			for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
 				c = lCases[caseX][caseY];
-				lCasesAdjacentes = new Case[8];
+				lCasesAdjacentes = new CaseModele[8];
 				if (caseX == 0) {
 					if (caseY == 0) {
 						lCasesAdjacentes[4] = lCases[caseX + 1][caseY];
@@ -176,20 +174,19 @@ public class Modele extends Observable implements Runnable {
 		}
 	}
 
-	public void reInit(String action) {
-		if ("Initialiser".equals(action)) {
-			premierTour = true;
-		}
-
-		for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
-			for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+	public void init() {
+		for (int caseX = 0; caseX < Constantes.DIMENSION_GRILLE; caseX++) {
+			for (int caseY = 0; caseY < Constantes.DIMENSION_GRILLE; caseY++) {
 				lCases[caseX][caseY].setAllumee(false);
 			}
 		}
-
 		notifyVue();
 	}
 
+	
+	public void random(){
+		premierTour = true;
+	}
 	public void play() {
 		enMarche = true;
 	}
@@ -205,7 +202,7 @@ public class Modele extends Observable implements Runnable {
 
 	public void updateCase(int posX, int posY) {
 		lCases[posX][posY].setAllumee(!lCases[posX][posY].isAllumee());
-
+		notifyVue();
 	}
 
 	// Méthodes de Runnable
