@@ -8,11 +8,13 @@ public class CaseModele {
 	private int posX;
 	private int posY;
 
-	// Case est allumée (true) ou éteinte (false)
+	// Case est allumée (true) ou éteinte (false).
 	private boolean allumee;
 
+	// Prochain état (allumée ou éteinte) de la case.
 	private boolean nextEtat;
 
+	// Variable conservant le nombre de cases vivantes dans l'entourage de la case courante.
 	private int nbCasesAdjacentesAllumees;
 
 	/*
@@ -23,8 +25,8 @@ public class CaseModele {
 
 	// Constructeurs
 	public CaseModele(int X, int Y) {
-		posX = Y;
-		posY = X;
+		posX = X;
+		posY = Y;
 		nbCasesAdjacentesAllumees = 0;
 		lCasesAdjacentes = new CaseModele[8];
 	}
@@ -35,6 +37,9 @@ public class CaseModele {
 	}
 
 	// Méthodes
+	/**
+	 * Ici, on calcule le nombre de cases vivantes dans l'entourage de la case courante.
+	 */
 	public void calculeNbCasesAdjAllumee() {
 		nbCasesAdjacentesAllumees = 0;
 		for (int i = 0; i < 8; i++) {
@@ -44,6 +49,10 @@ public class CaseModele {
 		}
 	}
 
+	/**
+	 *  Calcule le prochain état de la case et défini si la case doit vivre ou mourir.
+	 *  C'est en quelque sorte là où les règles sont définies.
+	 */
 	public void calculeNextEtat() {
 		calculeNbCasesAdjAllumee();
 		if (allumee

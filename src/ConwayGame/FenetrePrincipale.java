@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -28,10 +30,11 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	private int cDimension;
 	private Modele leModele;
 	private CaseVue[][] lCasesVues;
-	private final JButton bInit;
-	private final JButton bDemarrer;
-	private final JButton bPause;
-	private final JButton bRandom;
+	private JButton bInit;
+	private JButton bDemarrer;
+	private JButton bPause;
+	private JButton bRandom;
+	private JButton bSpeedUp, bSpeedDown;
 	private boolean isMouseDown = false;
 
 	/**
@@ -67,6 +70,55 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		this.pDroite = new JPanel(new FlowLayout());
 		this.pDroite.setPreferredSize(new Dimension(150, 25));
 		this.pPrincipal.add(this.pDroite, BorderLayout.EAST);
+
+		// Création des boutons
+		creationBoutons(this.pDroite);
+
+		// Ajout de la grille
+		this.pCentre = new JPanel();
+		this.pCentre.setLayout(new GridLayout(uneGrilleDimension,
+				uneGrilleDimension));
+		this.pPrincipal.add(this.pCentre, BorderLayout.CENTER);
+		// Remplissage de la grille, sauvegarde des références cases créent dans
+		// lCases
+		this.lCasesVues = new CaseVue[uneGrilleDimension][uneGrilleDimension];
+		for (int caseX = 0; caseX < uneGrilleDimension; caseX++) {
+			for (int caseY = 0; caseY < uneGrilleDimension; caseY++) {
+				lCasesVues[caseX][caseY] = new CaseVue(caseX, caseY);
+				// On transmet au modèle l'évènement "clic sur la case" pour
+				// qu'il mette à jour les données
+				lCasesVues[caseX][caseY].addMouseListener(new MouseAdapter() {
+					// Si la souris rentrer dans la zone de la case
+					public void mouseEntered(MouseEvent event) {
+						// Si le bouton gauche de la souris est pressé
+						if (isMouseDown) {
+							CaseVue laCaseVueClic = (CaseVue) event.getSource();
+							leModele.updateCase(laCaseVueClic.getPosX(),
+									laCaseVueClic.getPosY());
+						}
+					}
+
+					// Si le bouton gauche de la souris est pressé sur la case
+					public void mousePressed(MouseEvent event) {
+						isMouseDown = true;
+						CaseVue laCaseVueClic = (CaseVue) event.getSource();
+						leModele.updateCase(laCaseVueClic.getPosX(),
+								laCaseVueClic.getPosY());
+					}
+
+					// Si le bouton gauche de la souris est relâché sur la case
+					public void mouseReleased(MouseEvent event) {
+						isMouseDown = false;
+					}
+				});
+				// On ajoute la CaseVue dans le GridLayout pCentre
+				this.pCentre.add(lCasesVues[caseX][caseY]);
+			}
+		}
+	}
+
+	// Méthode de création des différents boutons.
+	private void creationBoutons(JPanel conteneur) {
 		// Bouton démarrer, qui déclenche la fonction play() du modèle au clic
 		this.bDemarrer = new JButton("Démarrer");
 		this.bDemarrer.setPreferredSize(new Dimension(140, 25));
@@ -101,50 +153,32 @@ public class FenetrePrincipale extends JFrame implements Observer {
 				leModele.random();
 			}
 		});
-		// Ajout des boutons dans le conteneur de la region EAST
-		this.pDroite.add(this.bDemarrer);
-		this.pDroite.add(this.bPause);
-		this.pDroite.add(this.bRandom);
-		this.pDroite.add(this.bInit);
-		// Ajout de la grille
-		this.pCentre = new JPanel();
-		this.pCentre.setLayout(new GridLayout(uneGrilleDimension,
-				uneGrilleDimension));
-		this.pPrincipal.add(this.pCentre, BorderLayout.CENTER);
-		// Remplissage de la grille, sauvegarde des références cases créent dans
-		// lCases
-		this.lCasesVues = new CaseVue[uneGrilleDimension][uneGrilleDimension];
-		for (int caseX = 0; caseX < uneGrilleDimension; caseX++) {
-			for (int caseY = 0; caseY < uneGrilleDimension; caseY++) {
-				lCasesVues[caseX][caseY] = new CaseVue(caseX, caseY);
-				// On transmet au modèle l'évènement "clic sur la case" pour
-				// qu'il mette à jour les données
-				lCasesVues[caseX][caseY].addMouseListener(new MouseAdapter() {
-					//Si la souris rentrer dans la zone de la case
-					public void mouseEntered(MouseEvent event) {
-						//Si le bouton gauche de la souris est pressé
-						if (isMouseDown) {
-							CaseVue laCaseVueClic = (CaseVue) event.getSource();
-							leModele.updateCase(laCaseVueClic.getPosX(),
-									laCaseVueClic.getPosY());
-						}
-					}
-					//Si le bouton gauche de la souris est pressé sur la case
-					public void mousePressed(MouseEvent event){
-						isMouseDown = true;
-						CaseVue laCaseVueClic = (CaseVue) event.getSource();
-						leModele.updateCase(laCaseVueClic.getPosX(),
-								laCaseVueClic.getPosY());
-					}
-					//Si le bouton gauche de la souris est relâché sur la case
-					public void mouseReleased(MouseEvent event){
-						isMouseDown = false;
-					}
-				});
-				// On ajoute la CaseVue dans le GridLayout pCentre
-				this.pCentre.add(lCasesVues[caseX][caseY]);
+
+		// Bouton Vitesse +, diminue le temps entre deux générations.
+		this.bSpeedUp = new JButton("Vitesse +");
+		this.bSpeedUp.setPreferredSize(new Dimension(140, 25));
+		this.bSpeedUp.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent event) {
+				leModele.augmenterVitesse();
 			}
-		}
+		});
+
+		// Bouton Vitesse -, diminue le temps entre deux générations.
+		this.bSpeedDown = new JButton("Vitesse -");
+		this.bSpeedDown.setPreferredSize(new Dimension(140, 25));
+		this.bSpeedDown.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent event) {
+				leModele.diminuerVitesse();
+			}
+		});
+
+		// Ajout des boutons dans le conteneur de la region EAST
+		conteneur.add(this.bDemarrer);
+		conteneur.add(this.bPause);
+		conteneur.add(this.bRandom);
+		conteneur.add(this.bInit);
+		conteneur.add(this.bSpeedUp);
+		conteneur.add(this.bSpeedDown);
 	}
 
 	/**
