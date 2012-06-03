@@ -5,8 +5,6 @@ import java.util.*;
 public class Modele extends Observable implements Runnable {
 	private boolean enMarche;
 
-	private boolean premierTour;
-
 	private CaseModele[][] lCases;
 
 	private int waitingTime;
@@ -24,9 +22,9 @@ public class Modele extends Observable implements Runnable {
 
 		donneCasesAdjacentes();
 
-		premierTour = true;
-
 		waitingTime = 1000;
+
+		enMarche = false;
 	}
 
 	/**
@@ -85,7 +83,6 @@ public class Modele extends Observable implements Runnable {
 				c.setAllumee(rand.nextBoolean());
 			}
 		}
-		premierTour = false;
 	}
 
 	// Calcule une nouvelle génération
@@ -106,6 +103,8 @@ public class Modele extends Observable implements Runnable {
 				c.setAllumee(c.isNextEtat());
 			}
 		}
+
+		notifyVue();
 	}
 
 	private void donneCasesAdjacentes() {
@@ -122,19 +121,18 @@ public class Modele extends Observable implements Runnable {
 				/**
 				 * Les numéros des cases dans le tableau permet de connaitre la
 				 * position relative de la case courante par rapport à ses
-				 * voisines. 
-				 * 0 1 2
-				 * 3 C 4
-				 * 5 6 7
-				 * Ceci permet d'éviter les OutOfBoundsException
+				 * voisines. 0 1 2 3 C 4 5 6 7 Ceci permet d'éviter les
+				 * OutOfBoundsException
 				 */
 				lCasesAdjacentes = new CaseModele[8];
-				if (X == 0) { 
+				if (X == 0) {
 					if (Y == 0) { // Coin supérieur gauche
 						lCasesAdjacentes[4] = lCases[X + 1][Y];
 						lCasesAdjacentes[6] = lCases[X][Y + 1];
 						lCasesAdjacentes[7] = lCases[X + 1][Y + 1];
-					} else if (Y == Constantes.DIMENSION_GRILLE - 1) { // Coin supérieur droit
+					} else if (Y == Constantes.DIMENSION_GRILLE - 1) { // Coin
+																		// supérieur
+																		// droit
 						lCasesAdjacentes[1] = lCases[X][Y - 1];
 						lCasesAdjacentes[2] = lCases[X + 1][Y - 1];
 						lCasesAdjacentes[4] = lCases[X + 1][Y];
@@ -145,12 +143,14 @@ public class Modele extends Observable implements Runnable {
 						lCasesAdjacentes[6] = lCases[X][Y + 1];
 						lCasesAdjacentes[7] = lCases[X + 1][Y + 1];
 					}
-				} else if (X == Constantes.DIMENSION_GRILLE - 1) { 
+				} else if (X == Constantes.DIMENSION_GRILLE - 1) {
 					if (Y == 0) { // Coin inférieur gauche
 						lCasesAdjacentes[3] = lCases[X - 1][Y];
 						lCasesAdjacentes[5] = lCases[X - 1][Y + 1];
 						lCasesAdjacentes[6] = lCases[X][Y + 1];
-					} else if (Y == Constantes.DIMENSION_GRILLE - 1) { // Coin inférieur droit
+					} else if (Y == Constantes.DIMENSION_GRILLE - 1) { // Coin
+																		// inférieur
+																		// droit
 						lCasesAdjacentes[0] = lCases[X - 1][Y - 1];
 						lCasesAdjacentes[1] = lCases[X][Y - 1];
 						lCasesAdjacentes[3] = lCases[X - 1][Y];
@@ -168,7 +168,9 @@ public class Modele extends Observable implements Runnable {
 						lCasesAdjacentes[5] = lCases[X - 1][Y + 1];
 						lCasesAdjacentes[6] = lCases[X][Y + 1];
 						lCasesAdjacentes[7] = lCases[X + 1][Y + 1];
-					} else if (Y == Constantes.DIMENSION_GRILLE - 1) { // Colonne de droite
+					} else if (Y == Constantes.DIMENSION_GRILLE - 1) { // Colonne
+																		// de
+																		// droite
 						lCasesAdjacentes[0] = lCases[X - 1][Y - 1];
 						lCasesAdjacentes[1] = lCases[X][Y - 1];
 						lCasesAdjacentes[2] = lCases[X + 1][Y - 1];
@@ -198,27 +200,41 @@ public class Modele extends Observable implements Runnable {
 			}
 		}
 		notifyVue();
+
+		waitingTime = 1000;
+
+		System.out.println("Initialisation");
+		
+		pause();
 	}
 
 	// Défini si la première itération doit générer une grille aléatoire
 	public void random() {
-		premierTour = true;
+		newRandomGeneration();
+		notifyVue();
+		System.out.println("Random");
+		
+		pause();
 	}
 
 	public void play() {
 		enMarche = true;
+		System.out.println("Play");
 	}
 
 	public void pause() {
 		enMarche = false;
+		System.out.println("Pause");
 	}
-	
+
 	public void augmenterVitesse() {
 		waitingTime = waitingTime / 2;
+		System.out.println("Vitesse + : " + waitingTime + "ms");
 	}
-	
+
 	public void diminuerVitesse() {
 		waitingTime = waitingTime * 2;
+		System.out.println("Vitesse - : " + waitingTime + "ms");
 	}
 
 	private void notifyVue() {
@@ -234,23 +250,17 @@ public class Modele extends Observable implements Runnable {
 	// Méthodes de Runnable
 	@Override
 	public void run() {
-
 		while (true) {
 			synchronized (this) {
 				if (enMarche) {
-					if (premierTour) {
-						newRandomGeneration();
-					} else {
-						newGeneration();
+					newGeneration();
+					try {
+						wait(waitingTime);
+					} catch (InterruptedException e) {
+						System.out.println(e.getMessage());
+					} catch (IllegalMonitorStateException e) {
+						System.out.println(e.getMessage());
 					}
-					notifyVue();
-				}
-				try {
-					wait(waitingTime);
-				} catch (InterruptedException e) {
-					System.out.println(e.getMessage());
-				} catch (IllegalMonitorStateException e) {
-					System.out.println(e.getMessage());
 				}
 			}
 		}

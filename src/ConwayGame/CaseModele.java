@@ -7,6 +7,7 @@ public class CaseModele {
 	// Position de la case sur la grille
 	private int posX;
 	private int posY;
+	private String couleur;
 
 	// Case est allumée (true) ou éteinte (false).
 	private boolean allumee;
@@ -57,14 +58,22 @@ public class CaseModele {
 		calculeNbCasesAdjAllumee();
 		if (allumee
 				&& (nbCasesAdjacentesAllumees < 2 || nbCasesAdjacentesAllumees > 3)) {
+			// Mourante
 			nextEtat = false;
+			couleur = Constantes.COULEUR_MOURANTE;
 		} else if (allumee
 				&& (nbCasesAdjacentesAllumees == 2 || nbCasesAdjacentesAllumees == 3)) {
+			// Reste en vie
 			nextEtat = true;
+			couleur = Constantes.COULEUR_VIVANTE;
 		} else if (!allumee && nbCasesAdjacentesAllumees == 3) {
+			// Naissante
 			nextEtat = true;
+			couleur = Constantes.COULEUR_NAISSANTE;
 		} else {
+			// Morte
 			nextEtat = false;
+			couleur = Constantes.COULEUR_MORTE;
 		}
 	}
 
@@ -136,6 +145,14 @@ public class CaseModele {
 
 	public void setPosY(int posY) {
 		this.posY = posY;
+	}
+
+	public String getCouleur() {
+		return couleur;
+	}
+
+	public void setCouleur(String couleur) {
+		this.couleur = couleur;
 	}
 
 	@Override
