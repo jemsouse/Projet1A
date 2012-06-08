@@ -36,6 +36,9 @@ public class FenetrePrincipale extends JFrame implements Observer {
 	private JButton bRandom;
 	private JButton bSpeedUp, bSpeedDown;
 	private JButton bPhasesVie;
+	
+	private JButton bSave, bLoad;
+	
 	private boolean isMouseDown = false;
 	private boolean phaseVie;
 
@@ -186,6 +189,25 @@ public class FenetrePrincipale extends JFrame implements Observer {
 				phaseVie = !phaseVie;
 			}
 		});
+		
+		// Sauvegarder grille
+		this.bSave = new JButton("Sauvegarder");
+		this.bSave.setPreferredSize(new Dimension(140, 25));
+		this.bSave.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent event) {
+				Pattern.sauvegarder("abc", new Pattern("abc", leModele.getCases()));
+			}
+		});
+		
+		// Charger pattern
+		this.bLoad = new JButton("Charger");
+		this.bLoad.setPreferredSize(new Dimension(140, 25));
+		this.bLoad.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent event) {
+				ChargerPattern(Pattern.charger("abc"));
+				Pattern.sauvegarder("abc", new Pattern("abc", leModele.getCases()));
+			}
+		});
 
 		// Ajout des boutons dans le conteneur de la region EAST
 		conteneur.add(this.bDemarrer);
@@ -195,6 +217,18 @@ public class FenetrePrincipale extends JFrame implements Observer {
 		conteneur.add(this.bSpeedUp);
 		conteneur.add(this.bSpeedDown);
 		conteneur.add(this.bPhasesVie);
+		conteneur.add(this.bSave);
+		conteneur.add(this.bLoad);
+	}
+
+	private void ChargerPattern(Pattern lePattern) {
+		for(CaseModele c : lePattern.getlCases()) {
+			if (c.isAllumee()) {
+				lCasesVues[c.getPosY()][c.getPosX()].setBackground(Color.blue);
+			} else {
+				lCasesVues[c.getPosY()][c.getPosX()].setBackground(Color.white);
+			}
+		}
 	}
 
 	private Color donneCouleur(String couleur) {

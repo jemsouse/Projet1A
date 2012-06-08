@@ -14,7 +14,7 @@ public class GameOfLife {
 		// Instance de notre modèle
 		Modele leModele = new Modele(laFenetre);
 		laFenetre.setLeModele(leModele);
-		leModele.setEnMarche(true);
+		leModele.setEnMarche(false);
 		Thread t = new Thread(leModele);
 		t.start();
 	}

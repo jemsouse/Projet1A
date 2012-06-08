@@ -7,22 +7,23 @@ public class CaseModele {
 	// Position de la case sur la grille
 	private int posX;
 	private int posY;
-	private String couleur;
+	private transient String couleur;
 
 	// Case est allumée (true) ou éteinte (false).
 	private boolean allumee;
 
 	// Prochain état (allumée ou éteinte) de la case.
-	private boolean nextEtat;
+	private transient boolean nextEtat;
 
 	// Variable conservant le nombre de cases vivantes dans l'entourage de la case courante.
-	private int nbCasesAdjacentesAllumees;
+	private transient int nbCasesAdjacentesAllumees;
 
 	/*
 	 * Liste des cases adjacentes Numéro des cases dans la liste : 0 1 2 3 X 4 5
 	 * 6 7
 	 */
-	private CaseModele[] lCasesAdjacentes;
+	// transient permet que l'attribut n'est pas sérialisé.
+	private transient CaseModele[] lCasesAdjacentes;
 
 	// Constructeurs
 	public CaseModele(int X, int Y) {
@@ -83,6 +84,9 @@ public class CaseModele {
 	 */
 	public boolean isAllumee() {
 		return allumee;
+	}
+
+	public CaseModele() {
 	}
 
 	/**
